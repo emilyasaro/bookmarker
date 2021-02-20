@@ -1,35 +1,52 @@
-const { Bookmark, Category, syncAndSeed } = require("./db.js");
+const { Bookmark, Category, syncAndSeed } = require('./db.js');
 const homepageHtml = require("./views/homePage");
-const express = require("express");
+const bookmarkList = require("./views/bookmarkList");
+const express = require('express');
 const app = express();
-const morgan = require("morgan");
-const path = require("path");
+const morgan = require('morgan');
 
 app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "/views/homePage")));
 
-app.get("/categories", async (req, res, next) => {
+
+app.get('/categories', async (req, res, next) => {
   try {
-    // console.log(homepageHtml);
     const categories = await Category.findAll();
-    // console.log(homepageHtml(categories));
     res.send(homepageHtml(categories));
-  } catch (error) {
+  }
+  catch (error) {
     next(error);
   }
-});
+})
+
+app.get('/categories/:id', async (req, res, next) => {
+  try {
+    const bookmarks = await Bookmark.findAll({
+      where: {
+        categoryId: req.params.id
+      },
+      include: [ Category ]
+      }
+    )
+    res.send(bookmarkList(bookmarks));
+  }
+  catch (error) {
+    next(error);
+  }
+})
+
+
+
 
 const PORT = 3000;
 
 const init = async () => {
   try {
     await syncAndSeed();
-    app.listen(PORT, () => {
-      console.log(`app listening on port ${PORT}`);
-    });
-  } catch (error) {
-    console.log(error);
+    app.listen(PORT, () => {console.log(`app listening on port ${PORT}`)})
   }
-};
+  catch (error) {
+    console.log(error)
+  }
+}
 
-init();
+init()
