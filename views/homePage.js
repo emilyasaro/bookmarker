@@ -4,6 +4,20 @@ module.exports = (categories) => html`
     <head></head>
     <body>
       <h1>Bookmarks</h1>
+      <form method="POST" action="/categories/:id/bookmarks">
+        <input name="siteName" placeholder="Site Name" />
+        <input name="url" placeholder="Site URL" />
+        <label for="category">Choose a category</label>
+        <select id="categories" name="categories">
+          ${categories.map(
+            (category) =>
+              html` <option value="${category.title}">
+                ${category.title}
+              </option>`
+          )}
+        </select>
+        <button type="submit">Save</button>
+      </form>
       <div id="homepage">
         ${categories.map((category) => html` <div>${category.title}</div> `)}
       </div>
