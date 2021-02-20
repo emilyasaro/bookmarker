@@ -1,37 +1,35 @@
-const { Bookmark, Category, syncAndSeed } = require('./db.js');
-
-const express = require('express');
+const { Bookmark, Category, syncAndSeed } = require("./db.js");
+const homepageHtml = require("./views/homePage");
+const express = require("express");
 const app = express();
-const morgan = require('morgan');
+const morgan = require("morgan");
+const path = require("path");
 
 app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "/views/homePage")));
 
-
-app.get('/categories', async (req, res, next) => {
+app.get("/categories", async (req, res, next) => {
   try {
+    // console.log(homepageHtml);
     const categories = await Category.findAll();
-    res.send(categories);
-  }
-  catch (error) {
+    // console.log(homepageHtml(categories));
+    res.send(homepageHtml(categories));
+  } catch (error) {
     next(error);
   }
-})
-
-
-
-
-
+});
 
 const PORT = 3000;
 
 const init = async () => {
   try {
     await syncAndSeed();
-    app.listen(PORT, () => {console.log(`app listening on port ${PORT}`)})
+    app.listen(PORT, () => {
+      console.log(`app listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
   }
-  catch (error) {
-    console.log(error)
-  }
-}
+};
 
-init()
+init();

@@ -1,7 +1,8 @@
 const { Sequelize, DataTypes, Model } = require("sequelize");
 
 const db = new Sequelize(
-  process.env.DATABASE_URL || "postgres://localhost/bookmarker", { logging:false }
+  process.env.DATABASE_URL || "postgres://localhost/bookmarker",
+  { logging: false }
 );
 
 class Bookmark extends Model {}
@@ -55,10 +56,13 @@ const syncAndSeed = async () => {
     );
     const [Netflix, Jackbox, Hulu] = await Promise.all(
       ["Netflix", "Jackbox", "Hulu"].map((name) =>
-        Bookmark.create({ name, url: `${name}.com`, categoryId: entertainment.id })
+        Bookmark.create({
+          name,
+          url: `${name}.com`,
+          categoryId: entertainment.id,
+        })
       )
     );
-    console.log(shop)
   } catch (error) {
     console.log(error);
   }
@@ -67,5 +71,5 @@ const syncAndSeed = async () => {
 module.exports = {
   Bookmark,
   Category,
-  syncAndSeed
-}
+  syncAndSeed,
+};
