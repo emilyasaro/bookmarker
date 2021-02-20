@@ -4,14 +4,14 @@ module.exports = (categories) => html`
     <head></head>
     <body>
       <h1>Bookmarks</h1>
-      <form method="POST" action="/categories/:id/bookmarks">
+      <form method="POST" action="/bookmarks">
         <input name="siteName" placeholder="Site Name" />
         <input name="url" placeholder="Site URL" />
         <label for="category">Choose a category</label>
         <select id="categories" name="categories">
           ${categories.map(
             (category) =>
-              html` <option value="${category.title}">
+              html` <option value="${category.id}">
                 ${category.title}
               </option>`
           )}

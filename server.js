@@ -5,7 +5,10 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 
+
 app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.get("/", (req, res) => res.redirect("/categories"));
 
@@ -32,8 +35,15 @@ app.get("/categories/:id", async (req, res, next) => {
   }
 });
 
-app.post("/categories", async (req, res, next) => {
+app.post("/bookmarks", async (req, res, next) => {
   try {
+    const { siteName, url, categories } = req.body;
+    const newBookmark = await Bookmark.create({
+      name: siteName,
+      url,
+      categoryId: categories,
+    })
+    res.redirect(`/categories/${newBookmark.categoryId}`)
   } catch (error) {
     next(error);
   }
